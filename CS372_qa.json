@@ -1,0 +1,27 @@
+[
+  {
+    "question": "What is the difference between supervised and unsupervised learning?",
+    "reference_answer": "Supervised learning uses labeled training data where the correct output is known, while unsupervised learning finds patterns in data without labeled outputs.",
+    "relevant_sources": []
+  },
+  {
+    "question": "What is the bias-variance tradeoff?",
+    "reference_answer": "The bias-variance tradeoff describes the tension between a model's ability to fit training data (low bias) and generalize to new data (low variance). High bias leads to underfitting; high variance leads to overfitting.",
+    "relevant_sources": []
+  },
+  {
+    "question": "How does gradient descent work?",
+    "reference_answer": "Gradient descent iteratively updates model parameters by moving in the direction of the negative gradient of the loss function, scaled by a learning rate, until convergence.",
+    "relevant_sources": []
+  },
+  {
+    "question": "What is regularization and why do we use it?",
+    "reference_answer": "Regularization adds a penalty term to the loss function to discourage overly complex models, reducing overfitting. L1 (Lasso) encourages sparsity; L2 (Ridge) penalizes large weights.",
+    "relevant_sources": []
+  },
+  {
+    "question": "Explain the transformer attention mechanism.",
+    "reference_answer": "Attention computes a weighted sum of value vectors, where weights are determined by the compatibility (dot product) between query and key vectors, scaled and softmaxed.",
+    "relevant_sources": []
+  }
+]
