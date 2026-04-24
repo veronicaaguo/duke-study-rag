@@ -2,9 +2,11 @@
 
 ## What it does
 
-General-purpose LLMs have three problems when used for studying: they cap how many files you can upload, they lose context over long conversations, and they hallucinate — confidently stating things that aren't in your course materials. This project builds a RAG-based Q&A chatbot specifically designed for Duke course materials (lecture slides, PDFs, supplemental readings) that addresses all three.
+Using a general-purpose LLM (ChatGPT, Claude) as a study assistant has real limitations: file upload caps mean you can't load an entire semester's worth of slides at once, context windows degrade in quality as conversations grow long, and LLMs hallucinate — confidently stating things that aren't in your course materials. This project builds a RAG-based Q&A chatbot that addresses all three.
 
-Instead of pasting files into a prompt, the system indexes your entire course corpus into a vector database. At query time it retrieves only the most relevant chunks, grounds the LLM's response in those chunks, and shows you exactly which source it drew from — so you can verify every answer. The result is a study assistant you can actually trust when reviewing for exams.
+Instead of pasting files into a prompt, the system indexes your course corpus into a vector database. At query time it retrieves only the most relevant chunks, grounds the LLM's response in those chunks, and shows you exactly which source it drew from — so you can verify every answer. The result is a study assistant you can actually trust when reviewing for exams.
+
+**Course-agnostic by design.** The pipeline was evaluated on 18 CS372 (Intro to Deep Learning) lectures, but works with any PDF-based course materials. To index a different course, run `python scripts/ingest.py --input data/raw/<COURSE> --course <COURSE>` and point the app at the new index. The underlying retrieval and generation logic is unchanged.
 
 ## Quick start
 
@@ -50,14 +52,16 @@ Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/
 - Fixed-chunk + dense + reranker achieves the best Recall@5 (0.933) — larger chunks cast a wider net over relevant content
 - End-to-end latency 5–20s; sentence chunking without reranking is the outlier at 19.8s due to the larger number of shorter chunks indexed
 
-**Best pipeline results** (sentence chunking + hybrid BM25 + cross-encoder reranker, 15-question test set):
+**Best pipeline results** (sentence chunking + hybrid BM25 + cross-encoder reranker, `text-embedding-3-small`, 31-question test set covering all 18 lectures):
 
 | Metric | Score |
 |---|---|
-| ROUGE-L | 0.107 |
-| Faithfulness (LLM-as-judge) | **0.933** |
-| Retrieval Recall@5 | **0.833** |
-| End-to-end latency | 8.1s |
+| ROUGE-L | **0.139** |
+| Faithfulness (LLM-as-judge) | 0.839 |
+| Retrieval Recall@5 | **0.871** |
+| End-to-end latency | 8.5s |
+
+*Note: Ablation study used `all-MiniLM-L6-v2` embeddings (384-dim) as a controlled baseline. Final pipeline upgraded to `text-embedding-3-small` (1536-dim), which improved ROUGE-L by +30% (0.107 → 0.139) and Recall@5 by +4.6% on the expanded 31-question set.*
 
 *Full per-question error analysis and prompt style comparison in `notebooks/evaluation.ipynb`.*
 
