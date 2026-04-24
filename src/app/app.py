@@ -43,6 +43,33 @@ st.title("📚 Duke Study Assistant")
 st.caption("Ask questions about your course materials. Every answer cites its source.")
 
 
+# ── Cached components ─────────────────────────────────────────────────────────
+# Defined before sidebar so the upload button handler can call them on rerun.
+
+@st.cache_resource
+def get_vector_store():
+    return VectorStore(
+        persist_dir=os.getenv("CHROMA_PERSIST_DIR", "data/processed/chroma"),
+    )
+
+
+@st.cache_resource
+def get_bm25():
+    retriever = BM25Retriever()
+    processed = Path("data/processed")
+    pkl_files = sorted(processed.glob("bm25_*.pkl")) if processed.exists() else []
+    if pkl_files:
+        retriever.load(str(pkl_files[-1]))
+    return retriever
+
+
+@st.cache_resource
+def get_reranker():
+    return CrossEncoderReranker(
+        os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
+    )
+
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 
 with st.sidebar:
@@ -117,33 +144,6 @@ with st.sidebar:
         if "assistant" in st.session_state:
             st.session_state.assistant.reset_history()
         st.rerun()
-
-
-# ── Cached components ─────────────────────────────────────────────────────────
-
-@st.cache_resource
-def get_vector_store():
-    return VectorStore(
-        persist_dir=os.getenv("CHROMA_PERSIST_DIR", "data/processed/chroma"),
-    )
-
-
-@st.cache_resource
-def get_bm25():
-    retriever = BM25Retriever()
-    # Try course-specific pkl files, fall back to any pkl in data/processed/
-    processed = Path("data/processed")
-    pkl_files = sorted(processed.glob("bm25_*.pkl")) if processed.exists() else []
-    if pkl_files:
-        retriever.load(str(pkl_files[-1]))  # load most recent
-    return retriever
-
-
-@st.cache_resource
-def get_reranker():
-    return CrossEncoderReranker(
-        os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
-    )
 
 
 def get_pipeline(use_bm25: bool, use_reranker: bool, top_k: int) -> HybridRetriever:
