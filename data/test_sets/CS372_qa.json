@@ -2,26 +2,76 @@
   {
     "question": "What is the difference between supervised and unsupervised learning?",
     "reference_answer": "Supervised learning uses labeled training data where the correct output is known, while unsupervised learning finds patterns in data without labeled outputs.",
-    "relevant_sources": []
+    "relevant_sources": ["01-WhatIsML.pdf"]
   },
   {
     "question": "What is the bias-variance tradeoff?",
     "reference_answer": "The bias-variance tradeoff describes the tension between a model's ability to fit training data (low bias) and generalize to new data (low variance). High bias leads to underfitting; high variance leads to overfitting.",
-    "relevant_sources": []
+    "relevant_sources": ["02-LinearModels.pdf"]
   },
   {
     "question": "How does gradient descent work?",
     "reference_answer": "Gradient descent iteratively updates model parameters by moving in the direction of the negative gradient of the loss function, scaled by a learning rate, until convergence.",
-    "relevant_sources": []
+    "relevant_sources": ["04-NeuralNetwork.pdf", "05-TrainingNetworks.pdf"]
   },
   {
     "question": "What is regularization and why do we use it?",
     "reference_answer": "Regularization adds a penalty term to the loss function to discourage overly complex models, reducing overfitting. L1 (Lasso) encourages sparsity; L2 (Ridge) penalizes large weights.",
-    "relevant_sources": []
+    "relevant_sources": ["02-LinearModels.pdf", "05-TrainingNetworks.pdf"]
   },
   {
     "question": "Explain the transformer attention mechanism.",
-    "reference_answer": "Attention computes a weighted sum of value vectors, where weights are determined by the compatibility (dot product) between query and key vectors, scaled and softmaxed.",
-    "relevant_sources": []
+    "reference_answer": "Attention computes a weighted sum of value vectors, where weights are determined by the compatibility (dot product) between query and key vectors, scaled by the square root of dimension and softmaxed.",
+    "relevant_sources": ["08-Transformer.pdf"]
+  },
+  {
+    "question": "What is a convolutional neural network and how does it differ from a fully connected network?",
+    "reference_answer": "A CNN uses convolutional filters that share weights across spatial positions, making it translation-invariant and parameter-efficient. Fully connected networks treat each input feature independently with separate weights.",
+    "relevant_sources": ["06-ConvolutionalNetworks.pdf"]
+  },
+  {
+    "question": "What is fine-tuning and how does it differ from training from scratch?",
+    "reference_answer": "Fine-tuning starts from a pretrained model's weights and continues training on a new task-specific dataset. Training from scratch initializes weights randomly. Fine-tuning is faster and requires less data because the pretrained model already captures useful features.",
+    "relevant_sources": ["10-FineTuning.pdf"]
+  },
+  {
+    "question": "What is in-context learning and how do few-shot examples help?",
+    "reference_answer": "In-context learning allows a language model to perform tasks by conditioning on examples in the prompt without updating weights. Few-shot examples show the model the expected input-output format, improving accuracy on new inputs.",
+    "relevant_sources": ["11-InContextLearning.pdf"]
+  },
+  {
+    "question": "How does a diffusion model generate images?",
+    "reference_answer": "Diffusion models learn to reverse a gradual noising process. During training, noise is progressively added to images. At inference, the model iteratively denoises random noise into a coherent image by predicting the noise at each step.",
+    "relevant_sources": ["13-Diffusion.pdf"]
+  },
+  {
+    "question": "What is the difference between value-based and policy-based reinforcement learning?",
+    "reference_answer": "Value-based RL (e.g. Q-learning) learns a value function estimating expected reward and derives a policy implicitly. Policy-based RL (e.g. REINFORCE) directly optimizes the policy parameters using gradient ascent on expected reward.",
+    "relevant_sources": ["16-ValueBasedRL.pdf", "17-PolicyBasedRL.pdf"]
+  },
+  {
+    "question": "What is a vision transformer (ViT) and how does it process images?",
+    "reference_answer": "ViT splits an image into fixed-size patches, linearly embeds each patch, adds positional embeddings, and feeds the sequence through a standard transformer encoder. This treats image patches analogously to tokens in NLP.",
+    "relevant_sources": ["12-VisionTransformers.pdf"]
+  },
+  {
+    "question": "What is dropout and how does it prevent overfitting?",
+    "reference_answer": "Dropout randomly sets a fraction of neuron activations to zero during training, forcing the network to learn redundant representations. This acts as an ensemble of many subnetworks, reducing co-adaptation of neurons and improving generalization.",
+    "relevant_sources": ["05-TrainingNetworks.pdf"]
+  },
+  {
+    "question": "What is the vanishing gradient problem and how is it addressed?",
+    "reference_answer": "Vanishing gradients occur when gradients become exponentially small during backpropagation through many layers, preventing early layers from learning. Solutions include ReLU activations, batch normalization, residual connections, and careful weight initialization.",
+    "relevant_sources": ["05-TrainingNetworks.pdf", "04-NeuralNetwork.pdf"]
+  },
+  {
+    "question": "How does language model pretraining work?",
+    "reference_answer": "Language models are pretrained on large text corpora using self-supervised objectives such as next-token prediction (causal LM) or masked token prediction (BERT). The model learns general language representations that can be adapted to downstream tasks.",
+    "relevant_sources": ["09-LanguageModels.pdf"]
+  },
+  {
+    "question": "What is classifier-free guidance in diffusion models?",
+    "reference_answer": "Classifier-free guidance trains a single model with and without conditioning. At inference, the score estimate is extrapolated beyond the conditional score using a guidance scale, trading diversity for fidelity to the conditioning signal.",
+    "relevant_sources": ["14-GuidedDiffusion.pdf"]
   }
 ]

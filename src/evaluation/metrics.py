@@ -41,7 +41,8 @@ def compute_retrieval_recall(
     if not relevant_sources:
         return 0.0
     retrieved_sources = {c["source"] for c in retrieved_chunks[:k]}
-    hits = sum(1 for s in relevant_sources if s in retrieved_sources)
+    # Match by substring so bare filenames match full paths (e.g. "lecture.pdf" matches "data/raw/.../lecture.pdf")
+    hits = sum(1 for s in relevant_sources if any(s in r or r.endswith(s) for r in retrieved_sources))
     return hits / len(relevant_sources)
 
 

@@ -85,24 +85,30 @@ def chunk_sentence(doc: RawDocument, max_chars: int = 600, overlap_sentences: in
     while i < len(sentences):
         current_chunk = []
         current_len = 0
+        start_i = i
         while i < len(sentences) and current_len + len(sentences[i]) < max_chars:
             current_chunk.append(sentences[i])
             current_len += len(sentences[i])
             i += 1
-        if current_chunk:
-            chunk_text = " ".join(current_chunk)
-            chunks.append(Chunk(
-                text=chunk_text,
-                source=doc.source,
-                course=doc.course,
-                chunk_id=f"{doc.source}::chunk_{idx}",
-                doc_type=doc.doc_type,
-                chunk_index=idx,
-                metadata={**doc.metadata, "strategy": "sentence"}
-            ))
-            idx += 1
-            # step back for overlap
-            i = max(0, i - overlap_sentences)
+        # If a single sentence exceeds max_chars, include it alone to avoid infinite loop
+        if not current_chunk:
+            current_chunk = [sentences[i]]
+            i += 1
+        chunk_text = " ".join(current_chunk)
+        chunks.append(Chunk(
+            text=chunk_text,
+            source=doc.source,
+            course=doc.course,
+            chunk_id=f"{doc.source}::chunk_{idx}",
+            doc_type=doc.doc_type,
+            chunk_index=idx,
+            metadata={**doc.metadata, "strategy": "sentence"}
+        ))
+        idx += 1
+        # Only step back for overlap if we consumed more than one sentence,
+        # otherwise i would not advance past start_i and we'd loop forever
+        if i - start_i > 1:
+            i = max(start_i + 1, i - overlap_sentences)
     return chunks
 
 

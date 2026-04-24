@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import List, Optional
 import os
 from loguru import logger
+from tqdm import tqdm
 
 import chromadb
 from chromadb.utils import embedding_functions
@@ -20,31 +21,31 @@ class VectorStore:
     """
     Wraps ChromaDB for persistent vector storage and dense retrieval.
     Embedding model is configurable for the ablation study comparing
-    OpenAI text-embedding-3-small vs sentence-transformers bge-large.
+    OpenAI text-embedding-3-small vs sentence-transformers all-MiniLM-L6-v2.
     """
 
     def __init__(
         self,
         persist_dir: str,
         collection_name: str = "duke_study",
-        embedding_model: str = "text-embedding-3-small",  # or "BAAI/bge-large-en-v1.5"
+        embedding_model: str = None,  # defaults to EMBEDDING_MODEL env var, then all-MiniLM-L6-v2
     ):
         self.persist_dir = persist_dir
-        self.embedding_model = embedding_model
+        self.embedding_model = embedding_model or os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
         self.collection_name = collection_name
 
         Path(persist_dir).mkdir(parents=True, exist_ok=True)
         self.client = chromadb.PersistentClient(path=persist_dir)
 
         # Choose embedding function based on model name
-        if embedding_model.startswith("text-embedding"):
+        if self.embedding_model.startswith("text-embedding"):
             ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.environ["OPENAI_API_KEY"],
-                model_name=embedding_model,
+                model_name=self.embedding_model,
             )
         else:
             ef = embedding_functions.SentenceTransformerEmbeddingFunction(
-                model_name=embedding_model
+                model_name=self.embedding_model
             )
 
         self.collection = self.client.get_or_create_collection(
@@ -64,7 +65,8 @@ class VectorStore:
             logger.info("All chunks already indexed, skipping.")
             return
 
-        for i in range(0, len(new_chunks), batch_size):
+        n_batches = (len(new_chunks) + batch_size - 1) // batch_size
+        for i in tqdm(range(0, len(new_chunks), batch_size), total=n_batches, desc="Embedding chunks"):
             batch = new_chunks[i:i + batch_size]
             self.collection.add(
                 ids=[c.chunk_id for c in batch],
@@ -77,7 +79,6 @@ class VectorStore:
                     **c.metadata
                 } for c in batch]
             )
-            logger.info(f"Indexed batch {i // batch_size + 1}: {len(batch)} chunks")
 
         logger.info(f"Total indexed: {self.collection.count()}")
 

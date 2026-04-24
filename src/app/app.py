@@ -125,17 +125,17 @@ with st.sidebar:
 def get_vector_store():
     return VectorStore(
         persist_dir=os.getenv("CHROMA_PERSIST_DIR", "data/processed/chroma"),
-        embedding_model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
     )
 
 
 @st.cache_resource
 def get_bm25():
-    # Load pre-built index if it exists
     retriever = BM25Retriever()
-    bm25_path = "data/processed/bm25_default.pkl"
-    if Path(bm25_path).exists():
-        retriever.load(bm25_path)
+    # Try course-specific pkl files, fall back to any pkl in data/processed/
+    processed = Path("data/processed")
+    pkl_files = sorted(processed.glob("bm25_*.pkl")) if processed.exists() else []
+    if pkl_files:
+        retriever.load(str(pkl_files[-1]))  # load most recent
     return retriever
 
 

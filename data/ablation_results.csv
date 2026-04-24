@@ -1,0 +1,13 @@
+config,chunking,hybrid_search,reranker,rouge_l,retrieval_recall,faithfulness,latency_s,n_cases
+fixed | dense | no-rerank,fixed,False,False,0.1006,0.8333,0.8667,8.413,15
+fixed | dense | rerank,fixed,False,True,0.1034,0.9333,0.8667,7.656,15
+fixed | hybrid | no-rerank,fixed,True,False,0.1184,0.8667,0.8667,6.422,15
+fixed | hybrid | rerank,fixed,True,True,0.1054,0.9,0.8,6.076,15
+sentence | dense | no-rerank,sentence,False,False,0.1212,0.7667,0.8667,19.8,15
+sentence | dense | rerank,sentence,False,True,0.1044,0.8333,0.8667,8.182,15
+sentence | hybrid | no-rerank,sentence,True,False,0.1098,0.7667,0.8667,7.001,15
+sentence | hybrid | rerank,sentence,True,True,0.1054,0.8333,0.9333,7.327,15
+semantic | dense | no-rerank,semantic,False,False,0.1273,0.8333,0.7333,5.378,15
+semantic | dense | rerank,semantic,False,True,0.1087,0.8333,0.8,6.808,15
+semantic | hybrid | no-rerank,semantic,True,False,0.1174,0.7,0.6667,5.605,15
+semantic | hybrid | rerank,semantic,True,True,0.1046,0.8333,0.8,10.967,15

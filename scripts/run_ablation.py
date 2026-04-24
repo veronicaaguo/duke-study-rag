@@ -69,6 +69,7 @@ def main():
     parser.add_argument("--course", required=True)
     parser.add_argument("--test-set", required=True, help="Path to JSON test set")
     parser.add_argument("--input", default="data/raw/", help="Raw documents directory")
+    parser.add_argument("--no-vision", action="store_true", help="Disable GPT-4o vision")
     args = parser.parse_args()
 
     # Load test set
@@ -77,7 +78,7 @@ def main():
     logger.info(f"Loaded {len(test_cases)} test cases")
 
     # Load raw documents once
-    docs = load_directory(Path(args.input), course=args.course)
+    docs = load_directory(Path(args.input), course=args.course, use_vision=not args.no_vision)
 
     # Ablation grid
     chunking_strategies = ["fixed", "sentence", "semantic"]
