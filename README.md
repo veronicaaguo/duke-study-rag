@@ -6,7 +6,13 @@ Using a general-purpose LLM (ChatGPT, Claude) as a study assistant has real limi
 
 Instead of pasting files into a prompt, the system indexes your course corpus into a vector database. At query time it retrieves only the most relevant chunks, grounds the LLM's response in those chunks, and shows you exactly which source it drew from — so you can verify every answer. The result is a study assistant you can actually trust when reviewing for exams.
 
-**Course-agnostic by design.** The pipeline was evaluated on 18 CS372 (Intro to Deep Learning) lectures, but works with any PDF-based course materials. To index a different course, run `python scripts/ingest.py --input data/raw/<COURSE> --course <COURSE>` and point the app at the new index. The underlying retrieval and generation logic is unchanged.
+**Currently indexed: CS372 (Intro to Deep Learning, Spring 2026).** The app ships with 18 CS372 lectures already embedded in the vector database — launch it and it works immediately. To use it for a different course, replace the indexed corpus by running:
+
+```bash
+python scripts/ingest.py --input data/raw/<YOUR_COURSE>/ --course <COURSE_NAME>
+```
+
+This re-indexes your documents and rebuilds the BM25 index. The retrieval and generation logic is unchanged — only the source documents differ.
 
 ## Quick start
 
@@ -64,6 +70,14 @@ Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/
 *Note: Ablation study used `all-MiniLM-L6-v2` embeddings (384-dim) as a controlled baseline. Final pipeline upgraded to `text-embedding-3-small` (1536-dim), which improved ROUGE-L by +30% (0.107 → 0.139) and Recall@5 by +4.6% on the expanded 31-question set.*
 
 *Full per-question error analysis and prompt style comparison in `notebooks/evaluation.ipynb`.*
+
+## Limitations & Future Work
+
+**In-browser file upload.** The most natural extension would be a file upload widget in the Streamlit sidebar — drag in your own PDFs and the system indexes them on the fly without touching the command line. The core challenge is ingestion latency: embedding a full semester's worth of slides (18 PDFs) takes 3–5 minutes, which is a poor user experience in a synchronous web UI. A production version would push ingestion to a background job (e.g., Celery + Redis) and show a live progress indicator, only making the index available once complete. This is left as future work.
+
+**Multi-course index.** Currently the app serves a single course index. A natural extension is a course selector in the UI that switches between pre-built indexes without re-ingesting.
+
+**Vision on more file types.** The current vision pipeline handles image-heavy PDF pages via GPT-4o. PPTX vision (diagrams embedded in slide objects) requires LibreOffice for rendering and is not enabled by default.
 
 ## Project structure
 
