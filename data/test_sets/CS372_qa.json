@@ -73,5 +73,85 @@
     "question": "What is classifier-free guidance in diffusion models?",
     "reference_answer": "Classifier-free guidance trains a single model with and without conditioning. At inference, the score estimate is extrapolated beyond the conditional score using a guidance scale, trading diversity for fidelity to the conditioning signal.",
     "relevant_sources": ["14-GuidedDiffusion.pdf"]
+  },
+  {
+    "question": "What is logistic regression and how does the sigmoid function map outputs to probabilities?",
+    "reference_answer": "Logistic regression is a linear classifier that applies the sigmoid function to a linear combination of input features. The sigmoid maps any real value to (0, 1), producing a probability that the input belongs to the positive class. The decision boundary is where the probability equals 0.5.",
+    "relevant_sources": ["03-LogisticRegression.pdf"]
+  },
+  {
+    "question": "What is the softmax function and why is it used for multi-class classification?",
+    "reference_answer": "Softmax converts a vector of raw scores (logits) into a probability distribution over classes by exponentiating each score and normalizing by the sum of all exponentiated scores. It is used because it ensures outputs are positive and sum to one, making them interpretable as class probabilities. Cross-entropy loss is typically paired with softmax.",
+    "relevant_sources": ["03-LogisticRegression.pdf"]
+  },
+  {
+    "question": "How does linear regression with ordinary least squares work, and what assumptions does it make?",
+    "reference_answer": "Ordinary least squares (OLS) fits a linear model by minimizing the sum of squared residuals between predictions and true targets. It assumes a linear relationship between features and target, independent and identically distributed errors, homoscedastic (constant variance) noise, and no perfect multicollinearity among features.",
+    "relevant_sources": ["02-LinearModels.pdf"]
+  },
+  {
+    "question": "How does backpropagation work and what role does the chain rule play?",
+    "reference_answer": "Backpropagation computes gradients of the loss with respect to all model parameters by applying the chain rule of calculus in reverse through the computation graph. Starting from the loss, gradients are propagated backward layer by layer — each layer multiplies the upstream gradient by the local Jacobian of its operation, accumulating the full gradient needed for parameter updates.",
+    "relevant_sources": ["04-NeuralNetwork.pdf"]
+  },
+  {
+    "question": "What is batch normalization and why does it help train deep networks?",
+    "reference_answer": "Batch normalization normalizes the activations of each layer across the mini-batch to have zero mean and unit variance, then applies learnable scale and shift parameters. It reduces internal covariate shift — the change in activation distributions during training — which allows higher learning rates, faster convergence, and acts as a mild regularizer.",
+    "relevant_sources": ["05-TrainingNetworks.pdf"]
+  },
+  {
+    "question": "Why does weight initialization matter and what are common strategies for neural networks?",
+    "reference_answer": "Poor initialization can cause vanishing or exploding gradients before training even begins. Common strategies include Xavier/Glorot initialization (scales by the number of input/output units, suitable for tanh/sigmoid) and He initialization (scales by the number of inputs only, designed for ReLU). Both aim to keep activation and gradient variances roughly constant across layers at initialization.",
+    "relevant_sources": ["05-TrainingNetworks.pdf"]
+  },
+  {
+    "question": "What is a residual connection (skip connection) in ResNets and why does it enable training much deeper networks?",
+    "reference_answer": "A residual connection adds the input of a block directly to its output: output = F(x) + x, where F(x) is the learned residual. This creates a shortcut path for gradients during backpropagation, preventing vanishing gradients even in networks with hundreds of layers. The network only needs to learn the residual (the difference from the identity), which is an easier optimization problem.",
+    "relevant_sources": ["07-ConvolutionalNetworksPart2.pdf"]
+  },
+  {
+    "question": "What is max pooling in CNNs, and what spatial properties does it give the network?",
+    "reference_answer": "Max pooling takes the maximum activation value within a local spatial window, downsampling the feature map. It provides a degree of translation invariance (small shifts in input produce the same pooled output), reduces spatial resolution to decrease computation in deeper layers, and preserves the most prominent feature detected in each local region.",
+    "relevant_sources": ["07-ConvolutionalNetworksPart2.pdf"]
+  },
+  {
+    "question": "What is positional encoding in transformers and why is it necessary?",
+    "reference_answer": "Transformers have no inherent notion of word order because attention is computed between all pairs simultaneously (permutation-invariant). Positional encodings are added to token embeddings to inject sequence position information. The original transformer uses sinusoidal encodings of different frequencies for each dimension, which allow the model to attend to relative positions and generalize to sequence lengths not seen during training.",
+    "relevant_sources": ["08-Transformer.pdf"]
+  },
+  {
+    "question": "What is multi-head attention and what advantage does it have over single-head attention?",
+    "reference_answer": "Multi-head attention runs several attention operations in parallel, each with its own learned query, key, and value projections (heads). The outputs are concatenated and projected. Each head can attend to different aspects of the input (e.g., syntactic vs. semantic relationships) simultaneously. Single-head attention collapses all information into one attention pattern, which is less expressive.",
+    "relevant_sources": ["08-Transformer.pdf"]
+  },
+  {
+    "question": "What is perplexity as a language model evaluation metric and what does a lower value mean?",
+    "reference_answer": "Perplexity is the exponentiated average negative log-likelihood per token: PPL = exp(-1/N * sum(log P(w_i))). It measures how surprised the model is by the test text on average. Lower perplexity means the model assigns higher probability to the actual next tokens, indicating a better-fit language model. A perplexity of k roughly means the model is as uncertain as if choosing uniformly from k options at each step.",
+    "relevant_sources": ["09-LanguageModels.pdf"]
+  },
+  {
+    "question": "What is chain-of-thought prompting and how does it improve LLM reasoning?",
+    "reference_answer": "Chain-of-thought (CoT) prompting provides few-shot examples that include step-by-step reasoning traces before the final answer, encouraging the model to generate intermediate reasoning steps. This improves performance on tasks requiring multi-step reasoning (math, logic, commonsense) because the model decomposes the problem rather than mapping directly from question to answer.",
+    "relevant_sources": ["11-InContextLearning.pdf"]
+  },
+  {
+    "question": "What is a Markov Decision Process (MDP) and what are its components?",
+    "reference_answer": "An MDP is the formal framework for sequential decision-making under uncertainty. Its components are: S (state space), A (action space), P(s'|s,a) (transition dynamics), R(s,a,s') (reward function), and γ (discount factor). The Markov property states the next state depends only on the current state and action, not on history. A policy π(a|s) defines the agent's behavior.",
+    "relevant_sources": ["15-IntroReinforcementLearning.pdf"]
+  },
+  {
+    "question": "What is the Bellman equation and how is it used in Q-learning?",
+    "reference_answer": "The Bellman equation expresses the value of a state (or state-action pair) as the immediate reward plus the discounted value of the next state: Q(s,a) = R + γ * max_{a'} Q(s',a'). Q-learning is a model-free algorithm that uses this equation as a TD update target: it iteratively adjusts Q-values toward the Bellman target until convergence, learning the optimal policy without knowing the transition dynamics.",
+    "relevant_sources": ["16-ValueBasedRL.pdf"]
+  },
+  {
+    "question": "What is the policy gradient theorem and how does the REINFORCE algorithm use it?",
+    "reference_answer": "The policy gradient theorem shows that the gradient of expected return with respect to policy parameters is proportional to the expected product of the return G_t and the log-probability of the taken action: ∇J(θ) ∝ E[G_t * ∇log π(a_t|s_t; θ)]. REINFORCE is a Monte Carlo algorithm that samples full episodes, computes the empirical return G_t for each step, and uses it directly to estimate this gradient for a parameter update.",
+    "relevant_sources": ["17-PolicyBasedRL.pdf"]
+  },
+  {
+    "question": "What are foundation models and what makes them different from task-specific models?",
+    "reference_answer": "Foundation models are large models pretrained on broad data at scale (e.g., GPT-4, CLIP, Gemini) that can be adapted to a wide range of downstream tasks via fine-tuning, prompting, or zero-shot inference. Unlike task-specific models trained on narrow datasets for one application, foundation models learn rich general representations that transfer across domains, and exhibit emergent capabilities not present in smaller models.",
+    "relevant_sources": ["18-SOTAModelsApplications.pdf"]
   }
 ]
