@@ -57,9 +57,9 @@ def get_vector_store():
 def get_bm25():
     retriever = BM25Retriever()
     processed = Path("data/processed")
-    pkl_files = sorted(processed.glob("bm25_*.pkl")) if processed.exists() else []
+    pkl_files = sorted(processed.glob("bm25_*.pkl"), key=lambda p: p.stat().st_mtime) if processed.exists() else []
     if pkl_files:
-        retriever.load(str(pkl_files[-1]))
+        retriever.load(str(pkl_files[-1]))  # most recently modified
     return retriever
 
 
