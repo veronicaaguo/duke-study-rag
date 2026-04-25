@@ -158,6 +158,22 @@ def get_pipeline(use_bm25: bool, use_reranker: bool, top_k: int) -> HybridRetrie
     )
 
 
+def render_answer(text: str) -> None:
+    """
+    Render an LLM answer in Streamlit with proper LaTeX support.
+
+    GPT-4o-mini outputs LaTeX using \\(...\\) and \\[...\\] delimiters, but
+    Streamlit's st.markdown() only renders $...$ and $$...$$ notation.
+    This converts between the two so equations display correctly.
+    """
+    import re
+    # Convert display math: \[...\]  →  $$...$$
+    text = re.sub(r'\\\[(.*?)\\\]', r'$$\1$$', text, flags=re.DOTALL)
+    # Convert inline math: \(...\)  →  $...$
+    text = re.sub(r'\\\((.*?)\\\)', r'$\1$', text, flags=re.DOTALL)
+    st.markdown(text)
+
+
 def get_assistant(prompt_style: str) -> StudyAssistant:
     if (
         "assistant" not in st.session_state
@@ -179,9 +195,13 @@ if "messages" not in st.session_state:
 # Render history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+        if msg["role"] == "assistant":
+            render_answer(msg["content"])
+        else:
+            st.markdown(msg["content"])
         if msg["role"] == "assistant" and msg.get("sources"):
-            with st.expander(f"Sources ({len(msg['sources'])} chunks retrieved)"):
+            srcs = msg["sources"]
+            with st.expander(f"Sources ({len(srcs)} chunk{'s' if len(srcs) != 1 else ''} matched)"):
                 for i, chunk in enumerate(msg["sources"], 1):
                     fname = chunk["metadata"].get("filename", chunk["source"].split("/")[-1])
                     doc_type = chunk["metadata"].get("doc_type", "")
@@ -213,10 +233,10 @@ if question := st.chat_input("Ask a question about your course materials..."):
             answer = result["answer"]
             sources = chunks
 
-        st.markdown(answer)
+        render_answer(answer)
 
         if sources:
-            with st.expander(f"Sources ({len(sources)} chunks retrieved)"):
+            with st.expander(f"Sources ({len(sources)} chunk{'s' if len(sources) != 1 else ''} matched)"):
                 for i, chunk in enumerate(sources, 1):
                     fname = chunk["metadata"].get("filename", chunk["source"].split("/")[-1])
                     doc_type = chunk["metadata"].get("doc_type", "")

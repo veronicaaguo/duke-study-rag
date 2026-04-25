@@ -29,9 +29,22 @@ class CrossEncoderReranker:
             logger.warning("sentence-transformers not installed — reranker disabled")
             self.model = None
 
-    def rerank(self, query: str, candidates: List[dict], top_k: int = 5) -> List[dict]:
+    def rerank(
+        self,
+        query: str,
+        candidates: List[dict],
+        top_k: int = 5,
+        score_threshold: Optional[float] = -3.0,
+    ) -> List[dict]:
         """
         Score each candidate against the query, return top_k sorted by score.
+
+        Chunks with a cross-encoder score below score_threshold are dropped so
+        the app only shows sources that are genuinely relevant — e.g. if only 3
+        of the top-5 candidates are relevant, 3 are returned instead of padding
+        with low-quality hits.  score_threshold=-3.0 removes clearly irrelevant
+        chunks while keeping borderline ones; set to None to disable filtering.
+
         Falls back to original order if model unavailable.
         """
         if self.model is None or not candidates:
@@ -44,4 +57,11 @@ class CrossEncoderReranker:
             candidate["rerank_score"] = float(score)
 
         reranked = sorted(candidates, key=lambda x: x.get("rerank_score", 0), reverse=True)
-        return reranked[:top_k]
+        top = reranked[:top_k]
+
+        # Drop chunks below threshold, but always keep at least 1 result
+        if score_threshold is not None:
+            filtered = [c for c in top if c.get("rerank_score", 0) >= score_threshold]
+            top = filtered if filtered else top[:1]
+
+        return top
