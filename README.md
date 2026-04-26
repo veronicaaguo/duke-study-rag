@@ -77,7 +77,7 @@ Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/
 
 ## Limitations & Future Work
 
-**In-browser file upload.** The most natural extension would be a file upload widget in the Streamlit sidebar — drag in your own PDFs and the system indexes them on the fly without touching the command line. The core challenge is ingestion latency: embedding a full semester's worth of slides (18 PDFs) takes 3–5 minutes, which is a poor user experience in a synchronous web UI. A production version would push ingestion to a background job (e.g., Celery + Redis) and show a live progress indicator, only making the index available once complete. This is left as future work.
+**In-browser file upload (partially implemented).** The Streamlit sidebar includes a file upload widget — drag in PDFs, PPTX, or text files and they are indexed immediately under the active course name. The current limitation is that uploaded chunks are held in memory for the session only and are not persisted across restarts. A production version would save the updated index to disk after each upload and push ingestion to a background job (e.g., Celery + Redis) so the UI remains responsive during the 3–5 minute embedding process for a full semester of slides.
 
 **Multi-course index.** Currently the app serves a single course index. A natural extension is a course selector in the UI that switches between pre-built indexes without re-ingesting.
 

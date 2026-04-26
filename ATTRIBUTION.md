@@ -23,7 +23,7 @@ This project was developed with assistance from Claude Code (Anthropic). GitHub 
 
 - `src/retrieval/reranker.py` — cross-encoder reranking pipeline with graceful fallback
 - All three prompt templates in `src/generation/prompts.py` (direct, chain-of-thought, Socratic)
-- `data/test_sets/CS372_qa.json` — 15 Q&A pairs manually authored from CS372 lecture materials, each annotated with `relevant_sources` for recall evaluation
+- `data/test_sets/CS372_qa.json` — 31 Q&A pairs manually authored from CS372 lecture materials, each annotated with `relevant_sources` for recall evaluation; expanded from an initial 15-question set to cover all 18 lectures
 - Design of the multi-stage pipeline architecture (vision → chunk → embed → BM25+dense → RRF → rerank → generate)
 
 ### What I had to debug, fix, or rework beyond AI suggestions
