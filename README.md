@@ -2,7 +2,7 @@
 
 ## What it does
 
-Using a general-purpose LLM (ChatGPT, Claude) as a study assistant has real limitations: file upload caps mean you can't load an entire semester's worth of slides at once, context windows degrade in quality as conversations grow long, and LLMs hallucinate — confidently stating things that aren't in your course materials. This project builds a RAG-based Q&A chatbot that addresses all three.
+Using a general-purpose LLM (ChatGPT, Claude) as a study assistant has limitations: file upload caps mean you can't load an entire semester's worth of slides at once, context windows degrade in quality as conversations grow long, and LLMs hallucinate — confidently stating things that aren't in your course materials. This project builds a RAG-based Q&A chatbot that addresses all three.
 
 Instead of pasting files into a prompt, the system indexes your course corpus into a vector database. At query time it retrieves only the most relevant chunks, grounds the LLM's response in those chunks, and shows you exactly which source it drew from — so you can verify every answer. The result is a study assistant you can actually trust when reviewing for exams.
 
