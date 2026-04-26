@@ -6,7 +6,7 @@ Using a general-purpose LLM (ChatGPT, Claude) as a study assistant has real limi
 
 Instead of pasting files into a prompt, the system indexes your course corpus into a vector database. At query time it retrieves only the most relevant chunks, grounds the LLM's response in those chunks, and shows you exactly which source it drew from — so you can verify every answer. The result is a study assistant you can actually trust when reviewing for exams.
 
-**Currently indexed: CS372 (Intro to Deep Learning, Spring 2026).** The app ships with 18 CS372 lectures already embedded in the vector database — launch it and it works immediately. To use it for a different course, replace the indexed corpus by running:
+**Currently indexed: CS372 (Introduction to Applied Machine Learning, Spring 2026).** The app ships with 18 CS372 lectures already embedded in the vector database — launch it and it works immediately. To use it for a different course, replace the indexed corpus by running:
 
 ```bash
 python scripts/ingest.py --input data/raw/<YOUR_COURSE>/ --course <COURSE_NAME>
