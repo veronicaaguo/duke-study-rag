@@ -38,7 +38,7 @@ streamlit run src/app/app.py
 
 ## Evaluation
 
-Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/evaluation.ipynb). Ablation across 12 pipeline configurations (3 chunking strategies × 2 retrieval modes × 2 reranker settings) on the full 18-lecture CS372 corpus (382 chunks):
+Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/evaluation.ipynb). Ablation across 12 pipeline configurations (3 chunking strategies × 2 retrieval modes × 2 reranker settings) on the full 18-lecture CS372 corpus (382 text-only chunks; ablation ran before vision augmentation to keep embeddings controlled):
 
 | Pipeline | Chunking | ROUGE-L | Faithfulness | Recall@5 | Latency (s) |
 |---|---|---|---|---|---|
@@ -47,9 +47,13 @@ Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/
 | Fixed chunks, hybrid BM25, no reranker | fixed | 0.118 | 0.867 | 0.867 | 6.42 |
 | Fixed chunks, hybrid BM25, + reranker | fixed | 0.105 | 0.800 | 0.900 | 6.08 |
 | Sentence chunks, dense only, no reranker | sentence | 0.121 | 0.867 | 0.767 | 19.80 |
-| Sentence chunks, hybrid BM25, + reranker | sentence | 0.105 | **0.933** | 0.833 | 7.33 |
+| Sentence chunks, dense only, + reranker | sentence | 0.104 | 0.867 | 0.833 | 8.18 |
+| Sentence chunks, hybrid BM25, no reranker | sentence | 0.110 | 0.867 | 0.767 | 7.00 |
+| Sentence chunks, hybrid BM25, + reranker *(best faithfulness)* | sentence | 0.105 | **0.933** | 0.833 | 7.33 |
 | Semantic chunks, dense only, no reranker *(best ROUGE-L)* | semantic | **0.127** | 0.733 | 0.833 | 5.38 |
+| Semantic chunks, dense only, + reranker | semantic | 0.109 | 0.800 | 0.833 | 6.81 |
 | Semantic chunks, hybrid BM25, no reranker | semantic | 0.117 | 0.667 | 0.700 | 5.61 |
+| Semantic chunks, hybrid BM25, + reranker | semantic | 0.105 | 0.800 | 0.833 | 10.97 |
 
 **Key findings:**
 - Semantic chunking achieves the best ROUGE-L (0.127) and fastest latency (5.38s) — grouping sentences by embedding similarity produces coherent, self-contained chunks that match query intent better
@@ -67,7 +71,7 @@ Full results and visualizations are in [`notebooks/evaluation.ipynb`](notebooks/
 | Retrieval Recall@5 | **0.871** |
 | End-to-end latency | 8.5s |
 
-*Note: Ablation study used `all-MiniLM-L6-v2` embeddings (384-dim) as a controlled baseline. Final pipeline upgraded to `text-embedding-3-small` (1536-dim), which improved ROUGE-L by +30% (0.107 → 0.139) and Recall@5 by +4.6% on the expanded 31-question set.*
+*Note: Ablation used `all-MiniLM-L6-v2` (384-dim) as a controlled, cost-free baseline across all 12 configs. The final pipeline result (0.139 ROUGE-L, 0.871 Recall@5) reflects three compounding upgrades applied together: `text-embedding-3-small` (1536-dim), GPT-4o vision augmentation (+112 chunks for image-heavy slides), and an expanded 31-question test set covering all 18 lectures.*
 
 *Full per-question error analysis and prompt style comparison in `notebooks/evaluation.ipynb`.*
 
