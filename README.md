@@ -34,7 +34,7 @@ streamlit run src/app/app.py
 ## Video links
 
 - Demo video: https://youtu.be/SJBUAN9v2r8
-- Technical walkthrough: [TBD]
+- Technical walkthrough: https://youtu.be/Glxcs5bZvUs
 
 ## Evaluation
 
