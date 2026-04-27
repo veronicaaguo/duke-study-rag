@@ -33,7 +33,7 @@ streamlit run src/app/app.py
 
 ## Video links
 
-- Demo video: [TBD]
+- Demo video: https://youtu.be/SJBUAN9v2r8
 - Technical walkthrough: [TBD]
 
 ## Evaluation
